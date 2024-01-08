@@ -1,16 +1,19 @@
 'use client';
-
 import { createContext, useContext, useEffect, useState } from 'react';
 import { io as ClientIO } from 'socket.io-client';
 
 type SocketContextType = {
 	socket: any | null;
 	isConnected: boolean;
+	randomNumber: number | null;
+	subscribeToRandomNumber: (callback: (number: number) => void) => void;
 };
 
 const SocketContext = createContext<SocketContextType>({
 	socket: null,
 	isConnected: false,
+	randomNumber: null,
+	subscribeToRandomNumber: () => {},
 });
 
 export const useSocket = () => {
@@ -18,17 +21,15 @@ export const useSocket = () => {
 };
 
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
-	const [socket, setSocket] = useState(null);
+	const [socket, setSocket] = useState<any | null>(null);
 	const [isConnected, setIsConnected] = useState(false);
+	const [randomNumber, setRandomNumber] = useState<number | null>(null);
 
 	useEffect(() => {
-		const socketInstance = new (ClientIO as any)(
-			process.env.NEXT_PUBLIC_SITE_URL!,
-			{
-				path: '/api/socket/io',
-				addTrailingSlash: false,
-			}
-		);
+		const socketInstance = new (ClientIO as any)('http://localhost:3000', {
+			path: '/api/socket/io',
+			addTrailingSlash: false,
+		});
 
 		socketInstance.on('connect', () => {
 			setIsConnected(true);
@@ -41,6 +42,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 		});
 
 		socketInstance.on('random number', (number: number) => {
+			setRandomNumber(number);
 			console.log('Received random number:', number);
 		});
 
@@ -51,8 +53,14 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 		};
 	}, []);
 
+	const subscribeToRandomNumber = (callback: (number: number) => void) => {
+		socket?.on('random number', callback);
+	};
+
 	return (
-		<SocketContext.Provider value={{ socket, isConnected }}>
+		<SocketContext.Provider
+			value={{ socket, isConnected, randomNumber, subscribeToRandomNumber }}
+		>
 			{children}
 		</SocketContext.Provider>
 	);

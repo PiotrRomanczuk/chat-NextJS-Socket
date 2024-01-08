@@ -24,22 +24,30 @@ export const config = {
 };
 
 const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
-	if (!res.socket.server.io) {
-		const path = '/api/socket/io';
-		const httpServer: NetServer = res.socket.server as any;
-		const io = new ServerIO(httpServer, {
-			path: path,
-			// @ts-ignore
-			addTrailingSlash: false,
-        });
-        
-setInterval(() => {
-    const randomNumber = Math.floor(Math.random() * 11);
-    console.log("Emitted random number:", randomNumber);
-    io.emit("random number", randomNumber);
-}, 1000);
-		res.socket.server.io = io;
-	}
+	console.log("Server started");
+
+if (!res.socket.server.io) {
+    console.log("Creating new Socket.IO server instance");
+   try {
+    const path = '/api/socket/io';
+    const httpServer: NetServer = res.socket.server as any;
+    const io = new ServerIO(httpServer, {
+        path: path,
+        addTrailingSlash: false,
+    });
+
+    setInterval(() => {
+        const randomNumber = Math.floor(Math.random() * 11);
+        console.log("Emitted random number:", randomNumber);
+        io.emit("random number", randomNumber);
+    }, 1000);
+
+    res.socket.server.io = io;
+
+   } catch (error) {
+     console.error("Error setting up Socket.IO server:", error);
+   } }
+
 
 	res.end();
 };
