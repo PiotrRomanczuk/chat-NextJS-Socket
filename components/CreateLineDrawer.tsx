@@ -1,27 +1,26 @@
 export function createLineDrawer(
 	canvas: HTMLCanvasElement,
-	initialX: number
-): () => void {
+	initialX: number,
+	initialLineWidth: number
+): (lineWidth: number) => void {
 	const context = canvas.getContext('2d');
 	if (!context) throw new Error('Unable to get 2D context');
 
 	let x = initialX;
 	let y = canvas.height;
-	const lineLength = 100;
 
-	return () => {
+	return (lineWidth: number) => {
 		context.clearRect(0, 0, canvas.width, canvas.height);
-
 		context.beginPath();
 		context.moveTo(x, y);
 
-		// Calculate the end point of the line, ensuring it doesn't go beyond the top of the canvas
-		const endY = Math.max(y - lineLength, 0);
+		const endY = Math.max(y - 100, 0);
 
+		context.lineWidth = lineWidth; // Set the line width based on the parameter
 		context.lineTo(x, endY);
 		context.stroke();
 
-		y -= 10; // Move up by 10 pixels for the next line
+		y -= 10;
 
 		if (y < 0) {
 			y = canvas.height;

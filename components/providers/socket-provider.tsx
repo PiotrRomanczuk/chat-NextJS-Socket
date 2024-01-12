@@ -6,17 +6,18 @@ type SocketContextType = {
 	socket: any | null;
 	isConnected: boolean;
 	randomNumber: number | null;
-	subscribeToRandomNumber: (callback: (number: number) => void) => void;
+	// subscribeToRandomNumber: (callback: (number: number) => void) => void;
 };
 
 const SocketContext = createContext<SocketContextType>({
 	socket: null,
 	isConnected: false,
 	randomNumber: null,
-	subscribeToRandomNumber: () => {},
+	// subscribeToRandomNumber: () => {},
 });
 
 export const useSocket = () => {
+	console.log(SocketContext);
 	return useContext(SocketContext);
 };
 
@@ -50,12 +51,12 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 			console.log('Disconnected from server');
 		});
 
-		socketInstance.on('random number', (number: number) => {
-			setTimeout(() => {
-				setRandomNumber(number);
-				console.log('Received random number:', number);
-			}, 1000);
-		});
+		// socketInstance.on('random number', (number: number) => {
+		// 	setTimeout(() => {
+		// 		setRandomNumber(number);
+		// 		console.log('Received random number:', number);
+		// 	}, 1000);
+		// });
 
 		setSocket(socketInstance);
 
@@ -64,13 +65,18 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 		};
 	}, []);
 
-	const subscribeToRandomNumber = (callback: (number: number) => void) => {
-		socket?.on('random number', callback);
-	};
+	// const subscribeToRandomNumber = (callback: (number: number) => void) => {
+	// 	socket?.on('random number', callback);
+	// };
 
 	return (
 		<SocketContext.Provider
-			value={{ socket, isConnected, randomNumber, subscribeToRandomNumber }}
+			value={{
+				socket,
+				isConnected,
+				randomNumber,
+				// subscribeToRandomNumber,
+			}}
 		>
 			{children}
 		</SocketContext.Provider>

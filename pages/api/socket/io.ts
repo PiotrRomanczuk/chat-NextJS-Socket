@@ -38,7 +38,7 @@ if (!res.socket.server.io) {
     
 setInterval(() => {
     const startingNumber = 10;
-    const incrementOrDecrement = Math.random() < 0.5 ? -1 : 1;
+    const incrementOrDecrement = Math.random() < 0.5 ? -2 : 2;
     const randomNumber = startingNumber + incrementOrDecrement;
     
     console.log("Emitted random number:", randomNumber);

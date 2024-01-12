@@ -1,28 +1,39 @@
 'use client';
-// YourComponent.tsx
-import React, { useRef, useEffect } from 'react';
-import { createLineDrawer } from './CreateLineDrawer';
+import React, { useRef, useEffect } from 'react'; // Import the LineDrawer class
+import useRandomNumber from '@/hooks/useRandomNumber';
+import { LineDrawer } from './LineDrawer_Class';
 
 export const CanvasComponent: React.FC = () => {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
+	const randomNumber = useRandomNumber();
 
 	useEffect(() => {
 		const canvas = canvasRef.current;
 		if (!canvas) return;
 
-		const lineDrawers: (() => void)[] = Array(20)
+		const lineDrawers: LineDrawer[] = Array(20)
 			.fill(null)
-			.map((index) => {
+			.map((_, index) => {
 				const initialX = (index + 1) * (canvas.width / 22);
-				return createLineDrawer(canvas, initialX);
+				return new LineDrawer(canvas, initialX);
 			});
 
 		const intervalId = setInterval(() => {
-			lineDrawers.forEach((drawLine) => drawLine());
+			lineDrawers.forEach((lineDrawer) => {
+				lineDrawer.drawLine(randomNumber!);
+			});
+
+			// Create a new LineDrawer for each line
+			lineDrawers.forEach((lineDrawer, index) => {
+				if (lineDrawer.getY() < 0) {
+					const initialX = (index + 1) * (canvas.width / 22);
+					lineDrawers[index] = new LineDrawer(canvas, initialX);
+				}
+			});
 		}, 30);
 
 		return () => clearInterval(intervalId);
-	}, []);
+	}, [randomNumber]);
 
 	return (
 		<canvas
