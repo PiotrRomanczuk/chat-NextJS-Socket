@@ -35,12 +35,16 @@ if (!res.socket.server.io) {
         path: path,
         addTrailingSlash: false,
     });
+    
+setInterval(() => {
+    const startingNumber = 10;
+    const incrementOrDecrement = Math.random() < 0.5 ? -1 : 1;
+    const randomNumber = startingNumber + incrementOrDecrement;
+    
+    console.log("Emitted random number:", randomNumber);
+    io.emit("random number", randomNumber);
+}, 1000);
 
-    setInterval(() => {
-        const randomNumber = Math.floor(Math.random() * 11);
-        console.log("Emitted random number:", randomNumber);
-        io.emit("random number", randomNumber);
-    }, 1000);
 
     res.socket.server.io = io;
 

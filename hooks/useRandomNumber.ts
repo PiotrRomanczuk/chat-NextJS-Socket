@@ -12,6 +12,7 @@ const useRandomNumber = () => {
       console.log('Handling random number in external file:', number);
     };
 
+    //hello
     // Subscribe to random number events
     subscribeToRandomNumber(handleRandomNumber);
 

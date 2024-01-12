@@ -20,6 +20,18 @@ export const useSocket = () => {
 	return useContext(SocketContext);
 };
 
+export const handleRandomNumberEvent = (
+	socketInstance: any,
+	setRandomNumber: React.Dispatch<React.SetStateAction<number | null>>
+) => {
+	socketInstance.on('random number', (number: number) => {
+		setTimeout(() => {
+			setRandomNumber(number);
+			console.log('Received random number:', number);
+		}, 1000);
+	});
+};
+
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 	const [socket, setSocket] = useState<any | null>(null);
 	const [isConnected, setIsConnected] = useState(false);
@@ -31,10 +43,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 			addTrailingSlash: false,
 		});
 
-		socketInstance.on('connect', () => {
-			setIsConnected(true);
-			console.log('Connected to server');
-		});
+		socketInstance.on('connect');
 
 		socketInstance.on('disconnect', () => {
 			setIsConnected(false);
@@ -42,8 +51,10 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 		});
 
 		socketInstance.on('random number', (number: number) => {
-			setRandomNumber(number);
-			console.log('Received random number:', number);
+			setTimeout(() => {
+				setRandomNumber(number);
+				console.log('Received random number:', number);
+			}, 1000);
 		});
 
 		setSocket(socketInstance);
