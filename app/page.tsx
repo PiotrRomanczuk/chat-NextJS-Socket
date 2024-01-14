@@ -1,12 +1,14 @@
 import { CanvasComponent } from '@/components/CanvasComponent';
 import { DisplayRandomServerNumber } from '@/components/DisplayRandomServerNumber';
 import { SocketIndicator } from '@/components/socket-indicator';
-import Image from 'next/image';
+
 export default function Home() {
-	<main>
-		Hello from chat
-		<SocketIndicator />
-		<DisplayRandomServerNumber />
-		<CanvasComponent />
-	</main>;
+	return (
+		<main className='text-black flex justify-center flex-col items-center h-screen'>
+			<h1>Hello from chat</h1>
+			<SocketIndicator />
+			<DisplayRandomServerNumber />
+			<CanvasComponent />
+		</main>
+	);
 }

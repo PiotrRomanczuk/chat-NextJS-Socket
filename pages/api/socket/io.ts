@@ -24,36 +24,34 @@ export const config = {
 };
 
 const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
-	console.log("Server started");
+	console.log('Server started');
 
-if (!res.socket.server.io) {
-    console.log("Creating new Socket.IO server instance");
-   try {
-    const path = '/api/socket/io';
-    const httpServer: NetServer = res.socket.server as any;
-    const io = new ServerIO(httpServer, {
-        path: path,
-        addTrailingSlash: false,
-    });
-    
-setInterval(() => {
-    const startingNumber = 10;
-    const incrementOrDecrement = Math.random() < 0.5 ? -2 : 2;
-    const randomNumber = startingNumber + incrementOrDecrement;
-    
-    console.log("Emitted random number:", randomNumber);
-    io.emit("random number", randomNumber);
-}, 1000);
+	if (!res.socket.server.io) {
+		console.log('Creating new Socket.IO server instance');
+		try {
+			const path = '/api/socket/io';
+			const httpServer: NetServer = res.socket.server as any;
+			const io = new ServerIO(httpServer, {
+				path: path,
+				addTrailingSlash: false,
+			});
 
+			if (io) {
+				setInterval(() => {
+					const randomNumber = Math.floor(Math.random() * 10);
+					console.log('Emitted random number:', randomNumber);
+					io.emit('random number', randomNumber);
+				}, 1000);
 
-    res.socket.server.io = io;
-
-   } catch (error) {
-     console.error("Error setting up Socket.IO server:", error);
-   } }
-
-
-	res.end();
+				res.socket.server.io = io;
+			} else {
+				console.error('Socket.IO server is undefined');
+			}
+			res.end();
+		} catch (error) {
+			console.error(error);
+		}
+	}
 };
 
 export default ioHandler;

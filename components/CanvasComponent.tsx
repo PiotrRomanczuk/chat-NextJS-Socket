@@ -1,5 +1,5 @@
 'use client';
-import React, { useRef, useEffect } from 'react'; // Import the LineDrawer class
+import React, { useRef, useEffect } from 'react';
 import useRandomNumber from '@/hooks/useRandomNumber';
 import { LineDrawer } from './LineDrawer_Class';
 
@@ -13,20 +13,22 @@ export const CanvasComponent: React.FC = () => {
 
 		const lineDrawers: LineDrawer[] = Array(20)
 			.fill(null)
-			.map((_, index) => {
-				const initialX = (index + 1) * (canvas.width / 22);
+			.map(() => {
+				const initialX = canvas.width / 2; // Set initialX to half of the canvas width
 				return new LineDrawer(canvas, initialX);
 			});
 
 		const intervalId = setInterval(() => {
+			const context = canvas.getContext('2d');
+			if (!context) return;
+
 			lineDrawers.forEach((lineDrawer) => {
 				lineDrawer.drawLine(randomNumber!);
 			});
 
-			// Create a new LineDrawer for each line
 			lineDrawers.forEach((lineDrawer, index) => {
 				if (lineDrawer.getY() < 0) {
-					const initialX = (index + 1) * (canvas.width / 22);
+					const initialX = canvas.width / 2; // Set initialX to half of the canvas width
 					lineDrawers[index] = new LineDrawer(canvas, initialX);
 				}
 			});
