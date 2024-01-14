@@ -14,7 +14,7 @@ export const CanvasComponent: React.FC = () => {
 		const lineDrawers: LineDrawer[] = Array(20)
 			.fill(null)
 			.map(() => {
-				const initialX = canvas.width / 2; // Set initialX to half of the canvas width
+				const initialX = Math.random() * canvas.width; // Set initialX to a random value between 0 and canvas width
 				return new LineDrawer(canvas, initialX);
 			});
 
@@ -28,7 +28,7 @@ export const CanvasComponent: React.FC = () => {
 
 			lineDrawers.forEach((lineDrawer, index) => {
 				if (lineDrawer.getY() < 0) {
-					const initialX = canvas.width / 2; // Set initialX to half of the canvas width
+					const initialX = Math.random() * canvas.width; // Set initialX to a random value between 0 and canvas width
 					lineDrawers[index] = new LineDrawer(canvas, initialX);
 				}
 			});

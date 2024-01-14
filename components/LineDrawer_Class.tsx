@@ -16,7 +16,6 @@ export class LineDrawer {
 	}
 
 	drawLine(lineWidth: number): void {
-		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 		this.context.beginPath();
 		this.context.moveTo(this.x, this.y);
 
@@ -27,6 +26,11 @@ export class LineDrawer {
 		this.context.stroke();
 
 		this.y -= 10;
+
+		// Reset the y position when it goes below a threshold
+		if (this.y < 0) {
+			this.y = this.canvas.height;
+		}
 	}
 
 	getY(): number {
